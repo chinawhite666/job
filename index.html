@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!-- @author Haroen <hello@haroen.me> -->
+<html lang="en">
+
+<head>
+  <title>星云dapp搜索引擎</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <link href='https://fonts.googleapis.com/css?family=Vidaloka' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/jquery-1.9.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="css/xcConfirm.css"/>
+<script type="text/javascript" src="./dist/nebulas.js"></script>
+<link href="css/spop.min.css" rel="stylesheet"/>
+<script type="text/javascript" src="./dist/nebPay.js"></script>
+<script  src="js/alert.js"></script>
+<link rel="stylesheet" href="css/bootstrap-table-expandable.css">
+<script src="js/bootstrap-table-expandable.js"></script>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="./css/mobie.css" media="only screen and (max-device-width:700px)">	
+
+
+ 
+<script type="text/javascript">
+    var dappContactAddress = "n1jEQBjtSZs2LoTHQSLLi1J5o1jEd9a7cNA";
+    var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+    neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));
+    var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+    var nebPay = new NebPay();
+    var serialNumber;
+    
+	  var from = dappContactAddress
+        var value = "0";
+        var nonce = "0"
+        var gas_price = "1000000"
+        var gas_limit = "2000000"
+        var callFunction = "getlength";
+        var callArgs = "[]";
+		var aaa;
+		var number=0;
+        console.log(callArgs);
+        var contract = {
+            "function": callFunction,
+            "args": callArgs
+        }
+    function get(){
+      showLoading({
+            title:"正在拼命加载资源",
+            mask:true,
+            success:function (res) {
+                console.warn(JSON.stringify(res))
+            }
+        });
+        setTimeout(function(){
+            hideLoading()
+        },2000);
+        spop('1已经适配手机端—18.6.14<br>2本站仅提供资源链接搜索服务，不存放任何实质内容。');
+        spop('分享资源需要在chrome浏览器并下载星云钱包<br><br><a href="https://github.com/nebulasio/WebExtensionWallet" target="_blank">星云钱包下载</a>-<a href="https://chinawhite666.github.io/Nebulas-Exchange/help.html" target="_blank">钱包使用教程</a>');
+		console.log("111");
+   
+		var callFunction = "getJoker";
+        
+		for(var i=0;i<30;i++){
+			console.log("222");
+			var callArgs = "[\""+i+"\"]";
+			var contract = {
+            "function": callFunction,
+            "args": callArgs
+			}
+			neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(function (resp) {
+            var result = resp.result;
+            
+      result = JSON.parse(result);
+			var contentstr = result.content;
+			if(contentstr.length>0 ){
+
+         var a= document.getElementById("list");
+        var b = document.createElement("blockquote");
+         b.innerHTML=contentstr;
+         a.appendChild(b);
+         holmes({
+        input: '.search input',
+        find: '.results blockquote',
+        placeholder: '',
+        class: {
+          visible: 'visible',
+          hidden: 'hidden'
+        }
+          });
+          
+			
+		
+			
+		  }
+        }).catch(function (err) {
+            console.log("error :" + err.message);
+
+        })
+
+		}
+
+
+
+	}
+  
+	window.onload =get;
+
+
+
+
+    
+	$(function(){
+		
+	
+    
+    $("#btn6").click(function(){
+					var txt=  "格式:内容介绍 链接 密码";
+        
+					window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.input,{
+						onOk:function(v){
+              var to = dappContactAddress;
+              var callFunction = "save";
+              var value = "0";
+              var callArgs = "[\"" +v+ "\"]";
+              serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+                listener: function (resp) {
+                    console.log("thecallback is " + resp)
+                    if(typeof resp == "string"){
+                    console.log("reject! cancel");
+                     alert("已取消上传")
+               
+                    }else{
+                      var a= document.getElementById("list");
+                       var b = document.createElement("blockquote");
+                      b.innerHTML=v;
+                      a.appendChild(b);
+                      alert("上传成功");
+                
+                
+            }
+                }
+            });
+
+
+            
+              
+							console.log(v);
+						}
+					});
+				});
+
+	});
+</script>
+
+</head>
+
+<body>
+  <header>
+    <h1>
+      <a href="#">nebulas</a>
+      <img src="images/holmes_logo-hover.svg" alt="Holmes Logo">
+    </h1>
+    <p>Fast and easy searching inside a page.</p>
+  </header>
+  <span class="separator" data-category="Cloud search"></span>
+ 
+  <pre><code class="microlight">
+  星云快搜，简单，快速地搜索你想要的资源
+    </code></pre>
+    <pre><code class="microlight hidden" id="full-doc">
+holmes({
+  // queryselector for the input
+  input: '.search input',
+  // queryselector for element to search in
+  find: '.results article',
+  // (optional) text to show when no results
+  placeholder: 'no results',
+  class: {
+    // (optional) class to add to matched elements
+    visible: 'visible',
+    // (optional) class to add to non-matched elements
+    hidden: 'hidden'
+  },
+  // (optional) if true, this will refresh the content every search
+  dynamic: false,
+  // (optional) needs to be true if the input is a contenteditable field instead of a
+  contenteditable: false,
+  // (optional) in case you don't want to wait for DOMContentLoaded before starting Holmes:
+  instant: true
+});
+    </code></pre>
+ 
+  <span class="separator" data-category=""></span>
+  <p><a  id="btn6">@分享你的资源</a></p>
+  <div class="search">
+    <input type="search" placeholder="search here" required>
+    
+  </div>
+  <div class="results" id="list">
+   
+      <blockquote>
+        <table class="table table-hover table-expandable">
+       
+  <tbody>
+    <tr>
+      <td>United States of America</td>
+      <td>306,939,000</td>
+      <td>9,826,630 km2</td>
+      <td>English</td>
+    </tr>
+    <tr>
+      <td colspan="5">
+        
+        <ul>
+          <li>USA on Wikipedia</li>
+          <li>National Atlas of the United States</li>
+          <li>这里显示更多信息</li>
+        </ul>   
+      </td>
+    </tr>
+    </tbody>
+    </table>
+      </blockquote>
+      <blockquote>
+        <table class="table table-hover table-expandable">
+       
+  <tbody>
+    <tr>
+      <td>United States of America</td>
+      <td>306,939,000</td>
+      <td>9,826,630 km2</td>
+      <td>English</td>
+    </tr>
+    <tr>
+      <td colspan="5">
+        
+        <ul>
+          <li>USA on Wikipedia</li>
+          <li>National Atlas of the United States</li>
+          <li>这里显示更多信息</li>
+        </ul>   
+      </td>
+    </tr>
+    </tbody>
+    </table>
+      </blockquote>
+      <blockquote>
+        机器学习视频@https://pan.baidu.com/s/1N7OXXbdTbFQ2eyZAf6JtMg@密码: hmyr
+        </blockquote>
+     <blockquote>
+       美剧《硅谷》s1-s5（s5是关于区块链哦，可以当科普看看）@https://pan.baidu.com/wap/init?surl=5sBQDe8C2x44pN7J3fR82g@密码23m5
+     </blockquote>   
+     <blockquote>
+        www.taobao.com
+        </blockquote>
+
+   
+  </div>
+  <span class="separator"></span>
+  
+  <script src="js/holmes.js"></script>
+  <script src="js/microlight.js"></script>
+ 
+  <script src="js/spop.min.js"></script>
+ 
+  <script>
+  // holmes setup
+ 
+
+  // show all of the options
+  document.getElementById('more').addEventListener('click',function(e){
+    e.preventDefault();
+    document.getElementById('full-doc').classList.toggle('hidden');
+  });
+
+  // toggle for showing hidden elements
+  document.querySelector('.toggle').addEventListener('click', function(e) {
+    e.target.classList.toggle('clicked');
+    document.querySelector('.results').classList.toggle('classes');
+  });
+  </script>
+</body>
+
+</html>
