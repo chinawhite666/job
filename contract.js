@@ -5,11 +5,13 @@ var Item = function(text) {
 	if(text) {
 		// 解析json
 		var obj=JSON.parse(text);
-		
+		this.name = obj.name;
+		this.com = obj.com;
 		this.content = obj.content;
 		this.account = obj.account;
 	}else {
-		
+		this.name = "";
+		this.com = "";
 		this.content = "";
 		this.account = "";
 	}
@@ -43,7 +45,7 @@ Connotations.prototype ={
 		this.length=0;
 	},
 	
-	save: function(value){
+	save: function(n,c,value){
 		
 
 		
@@ -51,6 +53,8 @@ Connotations.prototype ={
 		var item = new Item();
 		
 		item.content=value;
+		item.name=n;
+		item.com=c;
 		item.account=from;
 		this.Map.put(this.length,item);
 		this.length=this.length+1;
@@ -59,7 +63,7 @@ Connotations.prototype ={
 	
 	
 	
-	getJoker:function(x){
+	getone:function(x){
 		return this.Map.get(x-1);
 	},
 	getlength: function(){
